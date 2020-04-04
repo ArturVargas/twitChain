@@ -1,10 +1,14 @@
 import React, { Component } from "react";
+
 import TwitChain from "./contracts/TwitChain.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
 
 import Navbar from './components/Navbar';
+import Spinner from './components/Spinner';
+
+import PostList from './containers/PostList';
 
 class App extends Component {
   state = {
@@ -23,6 +27,7 @@ class App extends Component {
       console.log(accounts);
       this.setState({ account: accounts[0] })
 
+      // Va por el Id de la red
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = TwitChain.networks[networkId];
 
@@ -34,7 +39,16 @@ class App extends Component {
         this.setState({ twitChain });
         const postCount = await twitChain.methods.postCount().call()
         this.setState({ postCount })
-
+        for(let i= 1; i <= postCount; i++) {
+          const post = await twitChain.methods.posts(i).call();
+          this.setState({ posts: [...this.state.posts, post] });
+        }
+        this.setState({
+          posts: this.state.posts.sort((a,b) => b.tipAmount - a.tipAmount)
+        });
+        this.setState({ loading: false })
+      } else { 
+        alert('TwitChain contract not deployed to detected network')
       }
 
     } catch (error) {
@@ -44,13 +58,16 @@ class App extends Component {
       console.error(error);
     }
   };
-
+  
   render() {
-
     return (
-      <div className="App">
-        <Navbar account={this.state.account}/>
-
+      <div>
+        <Navbar account={this.state.account} />
+        {
+          this.state.loading 
+            ? <Spinner /> 
+            : <PostList posts={this.state.posts} />
+        }
       </div>
     );
   }
