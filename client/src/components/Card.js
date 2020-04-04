@@ -1,11 +1,12 @@
 import React from 'react';
-import Identicon from 'identicon.js';
+
+import Avatar from './Avatar';
 
 const Card = ({author, content, tipAmount}) => (
   <React.Fragment>
     <div className="card my-4">
       <div className="card-header">
-        <img className="mr-2" width="30" height="30" src={`data:image/png;base64,${new Identicon(author, 30).toString()}`} />
+        <Avatar userAddress={author} />
         <small className="text-muted">{author}</small>
       </div>
       <div className="card-body">

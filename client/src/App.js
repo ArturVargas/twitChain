@@ -58,6 +58,14 @@ class App extends Component {
       console.error(error);
     }
   };
+
+  createPost(content) {
+    this.setState({ loading: true })
+    this.state.twitChain.methods.createPost(content).send({ from: this.state.account })
+    .once('receipt', (receipt) => {
+      this.setState({ loading: false })
+    })
+  }
   
   render() {
     return (

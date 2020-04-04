@@ -1,9 +1,10 @@
 import React from 'react';
-import Identicon from 'identicon.js';
+
+import Avatar from './Avatar';
 
 export const Navbar = ({ account }) => (
   <React.Fragment>
-    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav className="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
       <a className="navbar-brand" href="/">
         <img src="https://1000marcas.net/wp-content/uploads/2019/11/Logo-Twitter.png" width="50" height="auto" className="d-inline-block align-top" alt="" />
           TwitChain
@@ -19,7 +20,7 @@ export const Navbar = ({ account }) => (
             </span>
             {
               account && (
-                <img className="ml-2" width="30" height="30" src={`data:image/png;base64,${new Identicon(account, 30).toString()}`} />
+                <Avatar userAddress={account}/>
               )
             }
           </li>
