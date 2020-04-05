@@ -60,13 +60,29 @@ class App extends Component {
   };
 
   createPost(content) {
+    console.log('----->>> ', content);
     this.setState({ loading: true })
     this.state.twitChain.methods.createPost(content).send({ from: this.state.account })
     .once('receipt', (receipt) => {
       this.setState({ loading: false })
     })
+  };
+
+  tipedPost(id, tipAmount){
+    this.setState({ loading: true })
+    this.state.twitChain.methods.tipPost(id).send({ from: this.state.account, value: tipAmount })
+    .once('receipt', (receipt) => {
+      console.log(receipt);
+      this.setState({ loading: false })
+    })
   }
-  
+
+  constructor() {
+    super()
+    this.createPost = this.createPost.bind(this);
+    this.tipedPost = this.tipedPost.bind(this);
+  }
+
   render() {
     return (
       <div>
@@ -74,7 +90,11 @@ class App extends Component {
         {
           this.state.loading 
             ? <Spinner /> 
-            : <PostList posts={this.state.posts} />
+            : <PostList 
+                posts={this.state.posts} 
+                createPost={this.createPost} 
+                tipedPost={this.tipedPost}
+              />
         }
       </div>
     );
